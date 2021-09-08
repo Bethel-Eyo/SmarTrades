@@ -9,7 +9,7 @@ export interface EventsProps {
   navigation?: any;
 }
 
-const Events: FC<EventsProps> = () => {
+const Events: FC<EventsProps> = ({navigation}) => {
   const {getData, events} = EventLogic();
 
   useEffect(() => {
@@ -34,7 +34,10 @@ const Events: FC<EventsProps> = () => {
         renderItem={({item}) => (
           <TouchableOpacity
             accessible={true}
-            accessibilityLabel={(item as any).name}>
+            accessibilityLabel={(item as any).name}
+            onPress={() => {
+              navigation.navigate('EventDetails', {item});
+            }}>
             <ListView
               name={(item as any).name}
               dateCreated={(item as any).created}
@@ -92,5 +95,7 @@ const Text = styled.Text`
 const NoText = styled.Text`
   margin-top: 50px;
   font-size: 20px;
-  margin-left: 5%;
+  margin-right: 10%;
+  color: ${primary.text};
+  text-align: center;
 `;

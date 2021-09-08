@@ -9,13 +9,15 @@ export interface Event {
   name: string;
   description: string;
   dateCreated: string;
+  startTime: string;
+  type: string;
 }
 
 export const getEvents = () => (dispatch: Dispatch<getEventsAction>) => {
   axios
     .get('https://api.smarkets.com/v3/events/')
     .then(res => {
-      console.log(res.data);
+      // console.log(res.data);
       Alert.alert('Data gotten successfully');
       dispatch({
         type: ActionType.SET_EVENTS,
