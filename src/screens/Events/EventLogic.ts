@@ -4,11 +4,11 @@ import {RootState} from '../../store/reducers';
 
 export const EventLogic = () => {
   const dispatch = useDispatch();
-  const {events} = useSelector((state: RootState) => state.event);
+  const {events, loading} = useSelector((state: RootState) => state.event);
 
   const getData = () => {
     dispatch(getEvents());
   };
 
-  return {getData, events};
+  return {getData, events, loading};
 };

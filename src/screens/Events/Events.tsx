@@ -1,5 +1,5 @@
 import React, {FC, useEffect} from 'react';
-import {TouchableOpacity} from 'react-native';
+import {TouchableOpacity, ActivityIndicator} from 'react-native';
 import styled from 'styled-components/native';
 import ListView from '../../components/ListView';
 import {background, primary} from '../../config/color';
@@ -10,7 +10,7 @@ export interface EventsProps {
 }
 
 const Events: FC<EventsProps> = ({navigation}) => {
-  const {getData, events} = EventLogic();
+  const {getData, events, loading} = EventLogic();
 
   useEffect(() => {
     if (events.length === 0) {
@@ -21,32 +21,40 @@ const Events: FC<EventsProps> = ({navigation}) => {
 
   return (
     <Container testID="root">
-      <HomeHeader testID="home-header">
-        <Title>SmarTrades</Title>
-        <Text>
-          Stay up to date with the list of the top sporting events around the
-          globe.
-        </Text>
-      </HomeHeader>
-      <MyList
-        testID="myFlatlist"
-        data={events}
-        renderItem={({item}) => (
-          <TouchableOpacity
-            accessible={true}
-            accessibilityLabel={(item as any).name}
-            onPress={() => {
-              navigation.navigate('EventDetails', {item});
-            }}>
-            <ListView
-              name={(item as any).name}
-              dateCreated={(item as any).created}
-            />
-          </TouchableOpacity>
-        )}
-        keyExtractor={item => `${(item as any).id}`}
-        ListEmptyComponent={<NoText>No Data found.</NoText>}
-      />
+      {loading ? (
+        <LoaderView>
+          <ActivityIndicator animating color={primary.main} size="large" />
+        </LoaderView>
+      ) : (
+        <Container>
+          <HomeHeader testID="home-header">
+            <Title>SmarTrades</Title>
+            <Text>
+              Stay up to date with the list of the top sporting events around
+              the globe.
+            </Text>
+          </HomeHeader>
+          <MyList
+            testID="myFlatlist"
+            data={events}
+            renderItem={({item}) => (
+              <TouchableOpacity
+                accessible={true}
+                accessibilityLabel={(item as any).name}
+                onPress={() => {
+                  navigation.navigate('EventDetails', {item});
+                }}>
+                <ListView
+                  name={(item as any).name}
+                  dateCreated={(item as any).created}
+                />
+              </TouchableOpacity>
+            )}
+            keyExtractor={item => `${(item as any).id}`}
+            ListEmptyComponent={<NoText>No Data found.</NoText>}
+          />
+        </Container>
+      )}
     </Container>
   );
 };
@@ -64,6 +72,7 @@ const Container = styled.SafeAreaView`
   align-items: center;
   flex: 1;
   background: ${background.main};
+  width: 100%;
 `;
 
 const HomeHeader = styled.View`
@@ -98,4 +107,10 @@ const NoText = styled.Text`
   margin-right: 10%;
   color: ${primary.text};
   text-align: center;
+`;
+
+const LoaderView = styled.View`
+  flex: 1;
+  justify-content: center;
+  align-self: center;
 `;
